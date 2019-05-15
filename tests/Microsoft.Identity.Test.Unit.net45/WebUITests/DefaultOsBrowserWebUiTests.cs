@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -99,6 +101,19 @@ namespace Microsoft.Identity.Test.Unit.WebUITests
         }
 
         [TestMethod]
+        public void NewRedirectUriCanBeGenerated()
+        {
+            // Arrange
+            var tcpInterceptor = Substitute.For<ITcpInterceptor>();
+
+            IWebUI webUi = new DefaultOsBrowserWebUi(_platformProxy, _logger, tcpInterceptor);
+
+            AssertNewUriIsGenerated(webUi, "http://localhost:0"); // no port
+            AssertNewUriIsGenerated(webUi, "http://localhost:80"); // default port
+
+        }
+
+        [TestMethod]
         public void ValidateRedirectUri()
         {
             // Arrange
@@ -110,10 +125,8 @@ namespace Microsoft.Identity.Test.Unit.WebUITests
             webUi.ValidateRedirectUri(new Uri("http://localhost:12345"));
             webUi.ValidateRedirectUri(new Uri("http://127.0.0.1:54321"));
 
-            AssertInvalidRedirectUri(webUi, "http://localhost"); // no port
-            AssertInvalidRedirectUri(webUi, "http://localhost:0"); // no port
-            AssertInvalidRedirectUri(webUi, "http://localhost:80"); // default port
-
+            AssertInvalidRedirectUri(webUi, "https://localhost"); // https
+            AssertInvalidRedirectUri(webUi, "http://www.bing.com"); // not localhost
             AssertInvalidRedirectUri(webUi, "http://www.bing.com:1234"); // not localhost
 
         }
@@ -122,6 +135,32 @@ namespace Microsoft.Identity.Test.Unit.WebUITests
         {
             var ex = AssertException.Throws<MsalClientException>(() => webUI.ValidateRedirectUri(new Uri(uri)));
             Assert.AreEqual(MsalError.LoopbackRedirectUri, ex.ErrorCode);
+        }
+
+        private static void AssertNewUriIsGenerated(IWebUI webUI, string uri)
+        {
+            var newUri = webUI.ValidateRedirectUri(new Uri(uri));
+            Assert.IsFalse(newUri.IsDefaultPort);
+            Assert.IsTrue(newUri.IsLoopback);
+
+            AssertPortIsFree(newUri.Port);
+        }
+
+        private static void AssertPortIsFree(int port)
+        {
+            var listner = new TcpListener(IPAddress.Loopback, port);
+            try
+            {
+                listner.Start();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Port {port} does not seem to be free, " + e.Message);
+            }
+            finally
+            {
+                listner?.Stop();
+            }
         }
     }
 }

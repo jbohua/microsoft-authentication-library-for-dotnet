@@ -90,6 +90,7 @@ namespace Microsoft.Identity.Client.Internal.Requests
 
         private async Task AcquireAuthorizationAsync(CancellationToken cancellationToken)
         {
+            AuthenticationRequestParameters.RedirectUri = _webUi?.ValidateRedirectUri(AuthenticationRequestParameters.RedirectUri);
             var authorizationUri = CreateAuthorizationUri(true);
 
             var uiEvent = new UiEvent(AuthenticationRequestParameters.RequestContext.TelemetryCorrelationId);
@@ -190,7 +191,7 @@ namespace Microsoft.Identity.Client.Internal.Requests
             }
         }
 
-        private Dictionary<string, string> CreateAuthorizationRequestParameters()
+        private Dictionary<string, string> CreateAuthorizationRequestParameters(Uri redirectUriOverride = null)
         {
             SortedSet<string> unionScope = GetDecoratedScope(
                 new SortedSet<string>(AuthenticationRequestParameters.Scope.Union(_extraScopesToConsent)));
@@ -201,7 +202,7 @@ namespace Microsoft.Identity.Client.Internal.Requests
                 [OAuth2Parameter.ResponseType] = OAuth2ResponseType.Code,
 
                 [OAuth2Parameter.ClientId] = AuthenticationRequestParameters.ClientId,
-                [OAuth2Parameter.RedirectUri] = AuthenticationRequestParameters.RedirectUri.OriginalString
+                [OAuth2Parameter.RedirectUri] = redirectUriOverride?.OriginalString ?? AuthenticationRequestParameters.RedirectUri.OriginalString
             };
 
             if (!string.IsNullOrWhiteSpace(_interactiveParameters.LoginHint))
