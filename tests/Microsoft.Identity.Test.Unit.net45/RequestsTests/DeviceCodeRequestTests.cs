@@ -25,7 +25,7 @@ using Microsoft.Identity.Test.Common;
 namespace Microsoft.Identity.Test.Unit.RequestsTests
 {
     [TestClass]
-    public class DeviceCodeRequestTests
+    public class DeviceCodeRequestTests : TestBase
     {
         private const string ExpectedDeviceCode =
             "BAQABAAEAAADXzZ3ifr-GRbDT45zNSEFEfU4P-bZYS1vkvv8xiXdb1_zX2xAcdcfEoei1o-t9-zTB9sWyTcddFEWahP1FJJJ_YVA1zvPM2sV56d_8O5G23ti5uu0nRbIsniczabYYEr-2ZsbgRO62oZjKlB1zF3EkuORg2QhMOjtsk-KP0aw8_iAA";
@@ -48,12 +48,7 @@ namespace Microsoft.Identity.Test.Unit.RequestsTests
             $"\"message\":\"{ExpectedMessage}\"," +
             $"}}";
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            TestCommon.ResetInternalStaticCaches();
-        }
-
+     
         private HttpResponseMessage CreateDeviceCodeResponseSuccessMessage()
         {
             return MockHelpers.CreateSuccessResponseMessage(ExpectedResponseMessage);
@@ -65,7 +60,7 @@ namespace Microsoft.Identity.Test.Unit.RequestsTests
         {
             const int NumberOfAuthorizationPendingRequestsToInject = 1;
 
-            using (var harness = new MockHttpAndServiceBundle())
+            using (var harness = CreateTestHarness())
             {
                 var parameters = CreateAuthenticationParametersAndSetupMocks(
                     harness,
@@ -121,7 +116,7 @@ namespace Microsoft.Identity.Test.Unit.RequestsTests
         [TestCategory("DeviceCodeRequestTests")]
         public async Task TestDeviceCodeCancelAsync()
         {
-            using (var harness = new MockHttpAndServiceBundle())
+            using (var harness = CreateTestHarness())
             {
                 const int NumberOfAuthorizationPendingRequestsToInject = 0;
                 var parameters = CreateAuthenticationParametersAndSetupMocks(

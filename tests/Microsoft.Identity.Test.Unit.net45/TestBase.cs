@@ -16,7 +16,9 @@ namespace Microsoft.Identity.Test.Unit
         [AssemblyInitialize]
         public static void AssemblyInit(TestContext context)
         {
-            // Initalization code goes here
+            // Uncomment the following line to capture all traces to file.
+            // Build definitions are confiogured to pick that file up and pubish it as an artifact.
+
             Trace.Listeners.Add(new TextWriterTraceListener("test-trace.log", "testListener"));
             Trace.WriteLine("Test run started");
         }
@@ -45,7 +47,7 @@ namespace Microsoft.Identity.Test.Unit
 
         public TestContext TestContext { get; set; }
 
-        internal MockHttpAndServiceBundle CreateTestHarness()
+        internal MockHttpAndServiceBundle CreateTestHarness(bool isExtendedTokenLifetime = false)
         {
             return new MockHttpAndServiceBundle(testContext: TestContext);
         }
