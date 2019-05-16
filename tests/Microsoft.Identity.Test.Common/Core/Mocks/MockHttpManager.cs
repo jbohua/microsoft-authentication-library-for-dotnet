@@ -49,7 +49,8 @@ namespace Microsoft.Identity.Test.Common.Core.Mocks
 
         public void AddMockHandler(HttpMessageHandler handler)
         {
-            Trace.WriteLine($"Test {_testContext?.TestName ?? "" } adds an HttpMessageHandler for { GetExpectedUrlFromHandler(handler) }");
+            string testName = _testContext?.TestName ?? "";
+            Trace.WriteLine($"Test {testName} adds an HttpMessageHandler for { GetExpectedUrlFromHandler(handler) }");
             _httpMessageHandlerQueue.Enqueue(handler);
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +20,11 @@ namespace Microsoft.Identity.Test.Unit
         {
             // Uncomment the following line to capture all traces to file.
             // Build definitions are configured to pick that file up and pubish it as an artifact.
+            string artifactsPath = Environment.GetEnvironmentVariable("Build.ArtifactStagingDirectory");
 
-            Trace.Listeners.Add(new TextWriterTraceListener("test-trace.log", "testListener"));
+            string path = String.IsNullOrEmpty(artifactsPath) ? "trace.log" : Path.Combine(artifactsPath, "trace.log");
+            
+            Trace.Listeners.Add(new TextWriterTraceListener(path, "testListener"));
             Trace.WriteLine("Test run started");
         }
 
@@ -31,7 +35,6 @@ namespace Microsoft.Identity.Test.Unit
             Trace.WriteLine("Test run finished");
             Trace.Flush();
         }
-
 
         [TestInitialize]
         public virtual void TestInitialize()
