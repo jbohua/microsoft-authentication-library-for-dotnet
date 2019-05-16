@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Identity.Client;
 using Microsoft.Identity.Test.Common;
 using Microsoft.Identity.Test.Common.Core.Mocks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,7 +18,7 @@ namespace Microsoft.Identity.Test.Unit
         public static void AssemblyInit(TestContext context)
         {
             // Uncomment the following line to capture all traces to file.
-            // Build definitions are confiogured to pick that file up and pubish it as an artifact.
+            // Build definitions are configured to pick that file up and pubish it as an artifact.
 
             Trace.Listeners.Add(new TextWriterTraceListener("test-trace.log", "testListener"));
             Trace.WriteLine("Test run started");
@@ -47,9 +48,16 @@ namespace Microsoft.Identity.Test.Unit
 
         public TestContext TestContext { get; set; }
 
-        internal MockHttpAndServiceBundle CreateTestHarness(bool isExtendedTokenLifetime = false)
+        internal MockHttpAndServiceBundle CreateTestHarness(
+            TelemetryCallback telemetryCallback = null,
+            LogCallback logCallback = null,
+            bool isExtendedTokenLifetimeEnabled = false)
         {
-            return new MockHttpAndServiceBundle(testContext: TestContext);
+            return new MockHttpAndServiceBundle(
+                telemetryCallback,
+                logCallback,
+                isExtendedTokenLifetimeEnabled,
+                testContext: TestContext);
         }
     }
 }
