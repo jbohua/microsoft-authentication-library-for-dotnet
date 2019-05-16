@@ -10,6 +10,7 @@ using Microsoft.Identity.Client.Core;
 using Microsoft.Identity.Client.Instance;
 using Microsoft.Identity.Client.Internal.Requests;
 using Microsoft.Identity.Test.Unit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Identity.Test.Common.Core.Mocks
 {
@@ -18,9 +19,10 @@ namespace Microsoft.Identity.Test.Common.Core.Mocks
         public MockHttpAndServiceBundle(
             TelemetryCallback telemetryCallback = null,
             LogCallback logCallback = null,
-            bool isExtendedTokenLifetimeEnabled = false)
+            bool isExtendedTokenLifetimeEnabled = false,
+            TestContext testContext = null)
         {
-            HttpManager = new MockHttpManager();
+            HttpManager = new MockHttpManager(testContext);
             ServiceBundle = TestCommon.CreateServiceBundleWithCustomHttpManager(
                 HttpManager,
                 telemetryCallback: telemetryCallback,
