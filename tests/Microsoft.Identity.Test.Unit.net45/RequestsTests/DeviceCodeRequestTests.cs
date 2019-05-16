@@ -155,7 +155,7 @@ namespace Microsoft.Identity.Test.Unit.RequestsTests
 
             var logCallbacks = new List<_LogData>();
 
-            using (var harness = new MockHttpAndServiceBundle(logCallback: (level, message, pii) =>
+            using (var harness = CreateTestHarness(logCallback: (level, message, pii) =>
             {
                 if (level == LogLevel.Error)
                 {

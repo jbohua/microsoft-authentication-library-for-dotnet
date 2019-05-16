@@ -24,14 +24,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.Identity.Test.Unit.RequestsTests
 {
     [TestClass]
-    public class InteractiveRequestTests
+    public class InteractiveRequestTests : TestBase
     {
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            TestCommon.ResetInternalStaticCaches();
-        }
-
         [TestMethod]
         [TestCategory("InteractiveRequestTests")]
         public async Task WithExtraQueryParamsAndClaimsAsync()
@@ -41,7 +35,7 @@ namespace Microsoft.Identity.Test.Unit.RequestsTests
                 MsalTestConstants.ExtraQueryParams.ToDictionary(e => e.Key, e => e.Value);
             extraQueryParamsAndClaims.Add(OAuth2Parameter.Claims, MsalTestConstants.Claims);
 
-            using (MockHttpAndServiceBundle harness = new MockHttpAndServiceBundle())
+            using (MockHttpAndServiceBundle harness = CreateTestHarness())
             {
                 var cache = new TokenCache(harness.ServiceBundle);
 
@@ -98,7 +92,7 @@ namespace Microsoft.Identity.Test.Unit.RequestsTests
         {
             MyReceiver myReceiver = new MyReceiver();
 
-            using (MockHttpAndServiceBundle harness = new MockHttpAndServiceBundle(telemetryCallback: myReceiver.HandleTelemetryEvents))
+            using (MockHttpAndServiceBundle harness = CreateTestHarness(telemetryCallback: myReceiver.HandleTelemetryEvents))
             {
                 TokenCache cache = new TokenCache(harness.ServiceBundle);
 
@@ -179,7 +173,7 @@ namespace Microsoft.Identity.Test.Unit.RequestsTests
         {
             try
             {
-                using (MockHttpAndServiceBundle harness = new MockHttpAndServiceBundle())
+                using (MockHttpAndServiceBundle harness = CreateTestHarness())
                 {
                     AuthenticationRequestParameters parameters = harness.CreateAuthenticationRequestParameters(
                         MsalTestConstants.AuthorityHomeTenant,
@@ -216,7 +210,7 @@ namespace Microsoft.Identity.Test.Unit.RequestsTests
         [TestCategory("InteractiveRequestTests")]
         public void VerifyAuthorizationResultTest()
         {
-            using (MockHttpAndServiceBundle harness = new MockHttpAndServiceBundle())
+            using (MockHttpAndServiceBundle harness = CreateTestHarness())
             {
                 MockInstanceDiscoveryAndOpenIdRequest(harness.HttpManager);
 
@@ -287,7 +281,7 @@ namespace Microsoft.Identity.Test.Unit.RequestsTests
         [TestCategory("InteractiveRequestTests")]
         public void DuplicateQueryParameterErrorTest()
         {
-            using (MockHttpAndServiceBundle harness = new MockHttpAndServiceBundle())
+            using (MockHttpAndServiceBundle harness = CreateTestHarness())
             {
                 harness.HttpManager.AddInstanceDiscoveryMockHandler();
                 harness.HttpManager.AddMockHandlerForTenantEndpointDiscovery(MsalTestConstants.AuthorityHomeTenant);

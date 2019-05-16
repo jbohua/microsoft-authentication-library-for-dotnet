@@ -169,9 +169,9 @@ namespace Microsoft.Identity.Test.Unit
                 });
         }
 
-        private static void ValidateOathClient(HttpResponseMessage httpResponseMessage, Action<Exception> validationHandler)
+        private void ValidateOathClient(HttpResponseMessage httpResponseMessage, Action<Exception> validationHandler)
         {
-            using (MockHttpAndServiceBundle harness = new MockHttpAndServiceBundle())
+            using (MockHttpAndServiceBundle harness = CreateTestHarness())
             {
                 harness.HttpManager.AddMockHandler(
                     new MockHttpMessageHandler

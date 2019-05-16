@@ -177,7 +177,7 @@ namespace Microsoft.Identity.Test.Unit.CacheTests
         [TestCategory("TokenCacheTests")]
         public void GetExpiredAccessToken_WithExtendedExpireStillValid_Test()
         {
-            using (var harness = CreateTestHarness())
+            using (var harness = CreateTestHarness(isExtendedTokenLifetimeEnabled: true))
             {
                 harness.HttpManager.AddInstanceDiscoveryMockHandler();
                 ITokenCacheInternal cache = new TokenCache(harness.ServiceBundle);

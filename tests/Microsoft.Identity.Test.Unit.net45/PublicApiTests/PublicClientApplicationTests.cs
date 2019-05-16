@@ -174,7 +174,7 @@ namespace Microsoft.Identity.Test.Unit.PublicApiTests
         {
             var receiver = new MyReceiver();
 
-            using (var harness = new MockHttpAndServiceBundle(telemetryCallback: receiver.HandleTelemetryEvents))
+            using (var harness = CreateTestHarness(telemetryCallback: receiver.HandleTelemetryEvents))
             {
                 harness.HttpManager.AddInstanceDiscoveryMockHandler();
 
