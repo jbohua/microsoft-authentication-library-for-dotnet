@@ -32,11 +32,11 @@ namespace Microsoft.Identity.Test.Unit.CacheTests
         private readonly TokenCacheHelper _tokenCacheHelper = new TokenCacheHelper();
 
 
-        [TestInitialize]
-        public override void TestInitialize()
-        {
-            TestCommon.ResetInternalStaticCaches();
-        }
+        //[TestInitialize]
+        //public override void TestInitialize()
+        //{
+        //    TestCommon.ResetInternalStaticCaches();
+        //}
 
 
         [TestMethod]
