@@ -29,7 +29,15 @@ namespace Microsoft.Identity.Test.Unit.CacheTests
         public static long ValidExpiresIn = 3600;
         public static long ValidExtendedExpiresIn = 7200;
 
-        private readonly TokenCacheHelper _tokenCacheHelper = new TokenCacheHelper();       
+        private readonly TokenCacheHelper _tokenCacheHelper = new TokenCacheHelper();
+
+
+        [TestInitialize]
+        public override void TestInitialize()
+        {
+            TestCommon.ResetInternalStaticCaches();
+        }
+
 
         [TestMethod]
         [TestCategory("TokenCacheTests")]
@@ -296,9 +304,7 @@ namespace Microsoft.Identity.Test.Unit.CacheTests
                     account: MsalTestConstants.User);
 
                 var rt = cache.FindRefreshTokenAsync(authParams).Result;
-                Assert.IsNull(rt);
-
-                Assert.IsNotNull(rt);
+                Assert.IsNull(rt);                
             }
         }
 

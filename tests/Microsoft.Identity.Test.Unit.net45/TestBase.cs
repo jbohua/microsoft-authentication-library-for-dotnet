@@ -31,7 +31,7 @@ namespace Microsoft.Identity.Test.Unit
 
 
         [TestInitialize]
-        public void TestInitialize()
+        public virtual void TestInitialize()
         {
             Trace.WriteLine("Test started " + TestContext.TestName);
             TestCommon.ResetInternalStaticCaches();
